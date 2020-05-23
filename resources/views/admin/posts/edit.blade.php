@@ -29,6 +29,29 @@
         </select>
 
       </div>
+      <div class="form-group">
+        <label for="">Seletc Tags</label>
+        @foreach($tags as $tag)
+        <div class="form-check">
+
+          <input class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="{{ 'checkboxid'.$tag->id }}"
+
+          @foreach($post->tags as $t)
+          @if($t->id == $tag->id)
+
+          checked
+
+          @endif
+
+          @endforeach
+
+          >
+          <label class="form-check-label" for="{{ 'checkboxid'.$tag->id }}">
+          {{ $tag->tag }}
+          </label>
+        </div>
+        @endforeach
+      </div>
 
 
       <div class="form-group">

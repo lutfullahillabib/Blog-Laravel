@@ -25,9 +25,19 @@
           @foreach($categories as $cateogry)
           <option value="{{ $cateogry->id }}">{{ $cateogry->name }}</option>
           @endforeach
-
         </select>
+      </div>
+      <div class="form-group">
+        <label for="">Seletc Tags</label>
+        @foreach($tags as $tag)
+        <div class="form-check">
 
+          <input class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="{{ 'checkboxid'.$tag->id }}">
+          <label class="form-check-label" for="{{ 'checkboxid'.$tag->id }}">
+          {{ $tag->tag }}
+          </label>
+        </div>
+        @endforeach
       </div>
 
       <div class="form-group">
@@ -36,7 +46,6 @@
       </div>
       <div class="text-center">
         <button type="submit" name="button" class="btn btn-success">Store Post</button>
-
       </div>
 
     </form>

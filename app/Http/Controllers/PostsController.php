@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Category;
 use App\Post;
+use App\Tag;
 use Session;
 
 class PostsController extends Controller
@@ -28,7 +29,7 @@ class PostsController extends Controller
     public function create()
     {
         //
-        return view('admin.posts.create')->with('categories',Category::all());
+        return view('admin.posts.create')->with('categories',Category::all())->with('tags',Tag::all());
     }
 
     /**
@@ -40,12 +41,15 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         //
+
         $this->validate($request,[
           'title' => 'required',
           'featured' => 'required|image',
           'content' => 'required',
           'category_id' => 'required',
+          'tags' => 'required',
         ]);
+
 
         $featured = $request->featured;
         $featured_new_name = time().$featured->getClientOriginalName();
@@ -58,6 +62,7 @@ class PostsController extends Controller
           'category_id' => $request->category_id,
           'slug' => Str::slug($request->title, '-'),
         ]);
+        $post->tags()->attach($request->tags);
 
         Session::flash('success','New Post Created');
         return redirect()->back();
@@ -83,7 +88,7 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
-        return view('admin.posts.edit')->with('post',$post)->with('categories',Category::all());
+        return view('admin.posts.edit')->with('post',$post)->with('categories',Category::all())->with('tags',Tag::all());
     }
 
     /**
@@ -102,7 +107,6 @@ class PostsController extends Controller
         'featured' => 'image'
       ]);
       $post = Post::find($id);
-
       if($request->hasFile('featured')){
         $featured = $request->featured;
         $featured_new_name = time().$featured->getClientOriginalName();
@@ -113,6 +117,8 @@ class PostsController extends Controller
       $post->content = $request->content;
       $post->category_id = $request->category_id;
       $post->save();
+
+      $post->tags()->sync($request->tags);
       Session::flash('success','Successfully Edited Post');
       return redirect()->back();
 
