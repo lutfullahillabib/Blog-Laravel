@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
 use Session;
+use Auth;
 class UsersController extends Controller
 {
     /**
@@ -101,7 +102,11 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->profile->delete();
+        $user->delete();
+        Session::flash('success','Successfully remove user');
+        return redirect()->back();
     }
 
     public function admin($id)
@@ -116,6 +121,10 @@ class UsersController extends Controller
     public function not_admin($id)
     {
       $user = User::find($id);
+      if(Auth::id() === $user->id){
+        Session::flash('info','You can not change your permission');
+        return redirect()->back();
+      }
       $user->admin = 0;
       $user->save();
       Session::flash('success','Successfully changed user permisson!');

@@ -10,17 +10,18 @@
     <!-- <title>{{ config('app.name', 'Blog') }}</title> -->
 
     <!-- Scripts -->
-
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
 
     <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/toastr.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/app.js') }}" defer ></script>
+    <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
+
+
+    @yield('style')
 </head>
 <body>
     <div id="app">
@@ -78,8 +79,7 @@
         <main class="py-4">
           <div class="container">
             <div class="row justify-content-center">
-              <div class="col-md-4"></div>
-              <div class="col-md-8">@include('admin.include.message')</div>
+
 
               @if (Auth::check())
               <div class="col-md-4">
@@ -122,6 +122,12 @@
                   <li class="list-group-item">
                     <a href="{{ route('post.create') }}">Create Post</a>
                   </li>
+                  @if(Auth::user()->admin)
+                  <li class="list-group-item">
+                    <a href="{{ route('settings') }}">Settigs</a>
+                  </li>
+                  @endif
+
                 </ul>
 
               </div>
@@ -134,6 +140,23 @@
 
         </main>
     </div>
+
+    <script src="{{ asset('js/jquery.js') }}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+      @if(Session::has('success'))
+
+        toastr.success('{{ Session::get("success") }}')
+      @endif
+      @if(Session::has('info'))
+        toastr.info('{{ Session::get("info") }}')
+      @endif
+    </script>
+
+      @yield('script')
 </body>
+
 
 </html>

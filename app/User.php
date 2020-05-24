@@ -37,8 +37,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function profile($value='')
+    public function profile()
     {
       return $this->hasOne('App\Profile');
+    }
+
+    public function posts()
+    {
+      return $this->hasMany('App\Post');
     }
 }

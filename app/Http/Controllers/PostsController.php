@@ -8,6 +8,7 @@ use App\Category;
 use App\Post;
 use App\Tag;
 use Session;
+use Auth;
 
 class PostsController extends Controller
 {
@@ -28,7 +29,12 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        $tags = Tag::all();
+        if(count($categories) == 0 || count($tags) == 0){
+          Session::flash('info','May be no category or tags created before create post. Create this first');
+          return redirect()->back();
+        }
         return view('admin.posts.create')->with('categories',Category::all())->with('tags',Tag::all());
     }
 
@@ -61,6 +67,7 @@ class PostsController extends Controller
           'featured' => 'upload/posts/' . $featured_new_name,
           'category_id' => $request->category_id,
           'slug' => Str::slug($request->title, '-'),
+          'user_id' => Auth::id(),
         ]);
         $post->tags()->attach($request->tags);
 
@@ -116,6 +123,7 @@ class PostsController extends Controller
       $post->title = $request->title;
       $post->content = $request->content;
       $post->category_id = $request->category_id;
+      $post->slug = Str::slug($request->title, '-');
       $post->save();
 
       $post->tags()->sync($request->tags);

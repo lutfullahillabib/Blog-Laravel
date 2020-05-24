@@ -42,7 +42,7 @@
 
       <div class="form-group">
         <label for="content">Content</label>
-        <textarea name="content" rows="8" cols="80" class="form-control"></textarea>
+        <textarea name="content" rows="8" cols="80" class="form-control" id="content"></textarea>
       </div>
       <div class="text-center">
         <button type="submit" name="button" class="btn btn-success">Store Post</button>
@@ -53,4 +53,18 @@
   </div>
 
 </div>
+@endsection
+
+@section('style')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@endsection
+
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#content').summernote();
+});
+</script>
 @endsection

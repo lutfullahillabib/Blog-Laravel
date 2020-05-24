@@ -29,7 +29,13 @@
                 <a href="{{ route('user.admin',['id'=> $user->id]) }}" class="btn btn-success btn-sm">Make Admin</a>
               @endif
             </td>
-            <td><a href="" class="btn btn-danger">Delete</a></td>
+            <td>
+              @if(Auth::id() !== $user->id)
+              <a href="{{ route('user.destroy',['id'=>$user->id]) }}" class="btn btn-danger">Delete</a>
+              @else
+              <span class="btn btn-info btn-sm">Current User</span>
+              @endif
+            </td>
           </tr>
           @endforeach
         @else

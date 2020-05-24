@@ -18,9 +18,36 @@ Route::get('/test',function(){
   dd(Auth::check());
 });
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/result', function(){
+  $result = App\Post::where('title','like','%'.request('q').'%')->get();
+  return view('result')
+          ->with('posts',$result)
+          ->with('title','Search results: '.request('q'))
+          ->with('categories',App\Category::take(6)->get())
+          ->with('info',App\Setting::first());
 });
+
+
+Route::get('/', [
+  'uses' => 'FrontEndController@index',
+  'as' => 'index'
+]);
+
+Route::get('/post/single/{slug}', [
+  'uses' => 'FrontEndController@postSingle',
+  'as' => 'post.single'
+]);
+
+Route::get('/category/single/{id}', [
+  'uses' => 'FrontEndController@categorySingle',
+  'as' => 'category.single'
+]);
+
+Route::get('/tag/single/{id}', [
+  'uses' => 'FrontEndController@tagSingle',
+  'as' => 'tag.single'
+]);
 
 Auth::routes();
 
@@ -28,6 +55,14 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
 
+  Route::get('/settings',[
+    'uses' => 'SettingsController@index',
+    'as' => 'settings'
+  ]);
+  Route::post('/settings/update',[
+    'uses' => 'SettingsController@update',
+    'as' => 'settings.update'
+  ]);
 
   Route::get('/user/profile',[
     'uses' => 'ProfileController@index',
@@ -37,8 +72,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
     'uses' => 'ProfileController@update',
     'as' => 'user.profile.update'
   ]);
-
-
 
   Route::get('/users',[
     'uses' => 'UsersController@index',
@@ -53,6 +86,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
   Route::post('/user/store',[
     'uses' => 'UsersController@store',
     'as' => 'user.store'
+  ]);
+
+  Route::get('user/delete/{id}',[
+    'uses' => 'UsersController@destroy',
+    'as' => 'user.destroy'
   ]);
 
   Route::get('/user/admin/{id}',[

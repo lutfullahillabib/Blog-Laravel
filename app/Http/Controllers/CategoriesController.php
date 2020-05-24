@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
+use App\Post;
 use Session;
 
 class CategoriesController extends Controller
@@ -101,6 +102,9 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
+        foreach ($category->posts as $post) {
+          $post->forceDelete();
+        }
         Session::flash('success',$category->name."is deleted");
         $category->delete();
         return redirect()->route('categories');
